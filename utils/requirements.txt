@@ -1,0 +1,5 @@
+sentencepiece
+deepspeed
+git+https://github.com/saforem2/ezpz
+pydftracer==1.0.5
+schedulefree
