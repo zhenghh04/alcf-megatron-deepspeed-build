@@ -1,5 +1,6 @@
 #!/bin/bash
 # This is the conda environment setup for Megatron-DeepSpeed code
+export SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 export BUILD=${BUILD:-"2025-03-25"}
 export HTTP_PROXY=http://proxy.alcf.anl.gov:3128
 export HTTPS_PROXY=http://proxy.alcf.anl.gov:3128
@@ -31,8 +32,8 @@ if [[ $TRANSFER_PACKAGE -eq "1" ]]; then
     export DST_DIR=/tmp/
     echo "Transfer built python package ($BUILD): `date`"
     # To remove completely the dependency on Lustre, one can copy the following files to /tmp and do transfer from there. 
-    mpiexec --no-vni --pmi=pmix -np $PBS_JOBSIZE --ppn 1 python ${FILESYSTEM}/Aurora_deployment/AuroraGPT/cache_soft.py \
-	  --src ${FILESYSTEM}/Aurora_deployment/AuroraGPT/build/${BUILD}/conda.tar.gz \
+    mpiexec --no-vni --pmi=pmix -np $PBS_JOBSIZE --ppn 1 python ${SCRIPT_DIR}/utils/cache_soft.py \
+	  --src $SCRIPT_DIR/conda.tar.gz \
 	  --dst /tmp/conda.tar.gz --d
     
     export MD=${DST_DIR}/Megatron-DeepSpeed/
@@ -45,7 +46,7 @@ if [[ $TRANSFER_PACKAGE -eq "1" ]]; then
     #mpiexec --no-vni --pmi=pmix -np ${PBS_JOBSIZE} --ppn 1 $AGPT_ROOT/soft/interposer.sh $DST_DIR/build_helper.sh    
 else
     echo "Using package on lustre"
-    export AGPT_ROOT=${FILESYSTEM}/Aurora_deployment/AuroraGPT/build/${BUILD}/
+    export AGPT_ROOT=$SCRIPT_DIR
     export DST_DIR=${AGPT_ROOT}
     source $DST_DIR/utils/ccl.sh
     export COPPER_TARGET_DIR=${DST_DIR}
