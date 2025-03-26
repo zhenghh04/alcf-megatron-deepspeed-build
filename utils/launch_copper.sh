@@ -16,6 +16,9 @@ LOGDIR=${COPPER_LOG_DIR}/${PBS_JOBID%%.aurora-pbs-0001.hostmgmt.cm.aurora.alcf.a
 
 CUPATH=$COPPER_ROOT/bin/cu_fuse
 CU_FUSE_MNT_VIEWDIR=/tmp/${USER}/copper
+
+mkdir -p $CU_FUSE_MNT_VIEWDIR
+
 physcpubind="48-51"
 
 
@@ -45,13 +48,13 @@ fi
 
 
 mkdir -p "${LOGDIR}" #only on head node
-if [ -d PBS_NODEFILE ]; then
+if [ -z "$PBS_NODEFILE" ]; then
+  echo "Cannot find PBS_NODEFILE to launch copper; copper will be disabled"
+  exit 100
+else
   clush --hostfile "${PBS_NODEFILE}" "fusermount3 -u ${CU_FUSE_MNT_VIEWDIR}"
   clush --hostfile "${PBS_NODEFILE}" "rm -rf ${CU_FUSE_MNT_VIEWDIR}"
   clush --hostfile "${PBS_NODEFILE}" "mkdir -p ${CU_FUSE_MNT_VIEWDIR}" # on all compute nodes
-else
-  echo "Cannot find PBS_NODEFILE to launch copper; copper will be disabled"
-  exit 100
 fi
 read -r -d '' CMD << EOM
    numactl --physcpubind=${physcpubind}
