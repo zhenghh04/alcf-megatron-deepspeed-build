@@ -7,7 +7,6 @@ export HTTPS_PROXY=http://proxy.alcf.anl.gov:3128
 export http_proxy=http://proxy.alcf.anl.gov:3128
 export https_proxy=http://proxy.alcf.anl.gov:3128
 export PYTHONNOUSERSITE=1
-export FILESYSTEM=/flare/
 export PPN=12
 export CC=icx
 export CXX=icpx
