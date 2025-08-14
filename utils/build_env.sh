@@ -1,7 +1,7 @@
 #!/bin/bash
 # Please run this on a compute node
-BUILD=2025-03-25
-export WORKDIR=${WORKDIR:-"/flare/Aurora_deployment/AuroraGPT/build/$BUILD"}
+BUILD=${BUILD:-$(date +%Y-%m-%d)}
+export WORKDIR=${WORKDIR:-"$PWD/build/$BUILD"}
 export https_proxy=http://proxy.alcf.anl.gov:3128
 export http_proxy=http://proxy.alcf.anl.gov:3128
 [ -e $WORKDIR/venvs ] || (source <(curl 'https://raw.githubusercontent.com/saforem2/ezpz/refs/heads/main/src/ezpz/bin/utils.sh') && ezpz_setup_env)
